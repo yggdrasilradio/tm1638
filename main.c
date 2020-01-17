@@ -7,7 +7,7 @@
 #include "tm1638.h"
 
 #define PIDFILE "/var/run/tm1638.pid"
-#define COMMAND "/home/rca/rpilights/.command"
+#define COMMAND "/tmp/.tm1638command"
 
 char command[128];
 
@@ -119,10 +119,10 @@ int main(int argc, char *argv[]) {
 				fscanf(fp, "%s\n", command);
 				fclose(fp);
 			} else
-				strcpy(command, "numbers"); // default animation
+				strcpy(command, "demo"); // default animation
 		}
 
-		// DISPLAY STRING
+		// DISPLAY LEFT JUSTIFIED
 		if (strcmp(command, "-l") == 0) {
 			stopService();
 			initDisplay();
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
 			exit(0);
 		}
 
-		// DISPLAY NUMBER
+		// DISPLAY RIGHT JUSTIFIED
 		if (strcmp(command, "-r") == 0) {
 			stopService();
 			initDisplay();
@@ -149,15 +149,18 @@ int main(int argc, char *argv[]) {
 		}
 
 		// DISPLAY RANDOM NUMBERS
-		if (strcmp(command, "numbers") == 0) {
+		if (strcmp(command, "demo") == 0) {
 			startService(randomNumbers);
 		}
 	}
 
 	// USAGE
 	printf("Usage:");
-	printf("\tdisplay on\t\tTurn display on\n");
-	printf("\tdisplay off\t\tTurn display off\n");
-	printf("\tdisplay status\t\tShow display status\n");
+	printf("\tdisplay off\t\t\tClear/stop display\n");
+	printf("\tdisplay on\t\t\tRestore previous display\n");
+	printf("\tdisplay demo\t\t\tDisplay random number/lights\n");
+	printf("\tdisplay -l \"HI ALICE\"\t\tDisplay left justified\n");
+	printf("\tdisplay -r \"3.141589\"\t\tDisplay right justified\n");
+	printf("\tdisplay lights 255\t\tDisplay number (0-255) in lights\n");
 	exit(0);
 }
